@@ -1,0 +1,56 @@
+registration = {
+  aim: 5,
+  control: 4,
+  created_at: 2023-05-28T16:32:03.327Z,
+  discord: {
+    account: { id: 'rec_chpo3f55l5q3o1gvb8vg' },
+    avatar: 'c0c52cf90ecb7368f4b27a4f85243a48',
+    avatar_url: 'https://cdn.discordapp.com/avatars/477362413524484096/c0c52cf90ecb7368f4b27a4f85243a48.png',
+    discriminator: 1600,
+    id: '477362413524484096',
+    username: 'Kawaiii'
+  },
+  id: '10029074',
+  osu: {
+    account: { id: 'rec_chpk5g0svkgrtbk4tl40' },
+    avatar_url: 'https://a.ppy.sh/10029074?1669520142.png',
+    badges: 3,
+    country_code: 'VN',
+    id: '10029074',
+    rank: 13604,
+    username: 'thanh792001'
+  },
+  reading: 3,
+  speed: 2,
+  stamina: 3,
+  tech: 4,
+  title: 'Squink Clown',
+  tz: 7
+}
+
+member = {
+  avatar: null,
+  communication_disabled_until: null,
+  flags: 0,
+  joined_at: '2023-05-29T16:05:52.221000+00:00',
+  nick: null,
+  pending: false,
+  premium_since: null,
+  roles: [ '1100250097008246876' ],
+  user: {
+    id: '87367806655406080',
+    username: 'Samba',
+    avatar: '769d474abdefeb46d82608bd81ee5ccb',
+    discriminator: '5023',
+    public_flags: 0,
+    flags: 0,
+    banner: null,
+    accent_color: null,
+    global_name: null,
+    avatar_decoration: null,
+    display_name: null,
+    banner_color: null
+  },
+  mute: false,
+  deaf: false
+}

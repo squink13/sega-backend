@@ -10,9 +10,13 @@ export function getDiscordTag(username, discriminator) {
 }
 
 export function generateAvatarUrl(id, avatar) {
-  let format = "png";
-  if (avatar && avatar.startsWith("a_")) {
-    format = "gif";
+  if (avatar) {
+    let format = "png";
+    if (avatar && avatar.startsWith("a_")) {
+      format = "gif";
+    }
+    return `https://cdn.discordapp.com/avatars/${id}/${avatar}.${format}`;
   }
-  return `https://cdn.discordapp.com/avatars/${id}/${avatar}.${format}`;
+
+  return null;
 }

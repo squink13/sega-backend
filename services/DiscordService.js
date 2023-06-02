@@ -1,4 +1,8 @@
 import axios from "axios";
+import { Client, GatewayIntentBits } from "discord.js";
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages] });
+client.login(process.env.DISCORD_BOT_TOKEN);
 
 const botToken = process.env.DISCORD_BOT_TOKEN;
 const guildId = "1089693219383676948";
@@ -83,6 +87,35 @@ export async function removeRegisteredRole(member) {
   return;
 }
 
-export function updateDiscordNickname() {
-  // TODO: Implement updateDiscordNickname()
+export async function updateDiscordNickname(newName, member) {
+  let data = {
+    nick: newName,
+  };
+
+  if (newName === member.user.username) {
+    // To remove the nickname, we need to send a null value for nick.
+    data.nick = null;
+  }
+
+  try {
+    await axios.patch(`https://discord.com/api/guilds/${guildId}/members/${member.user.id}`, data, {
+      headers: {
+        Authorization: `Bot ${botToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(`Nickname updated successfully for user ${member.user.id}`);
+  } catch (error) {
+    console.error(`Error updating nickname for user ${member.user.id}:`, error);
+  }
+}
+
+export async function sendDirectMessage(id, message) {
+  try {
+    let targetUser = await client.users.fetch(id);
+    await targetUser.send(message);
+  } catch (error) {
+    console.error(`Error sending direct message to user ${id}`);
+  }
 }

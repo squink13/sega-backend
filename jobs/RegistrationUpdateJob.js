@@ -1,6 +1,8 @@
 import cron from "node-cron";
-import { getAllRegistrations } from "../services/DatabaseService.js";
 import { addRegisteredRole, getAllMembers, removeRegisteredRole } from "../services/DiscordService.js";
+import { getOsuUser } from "../services/OsuService.js";
+import { getAllRegistrations, removeRegistration, updateRegistration } from "../services/RegistrationService.js";
+import { BadgeFilter, BwsRankCalc } from "../util/OsuUtils.js";
 
 const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
 
@@ -47,15 +49,31 @@ async function registrationUpdateJob() {
         }
       }
 
-      /*
-      for each registration:
-        a. check if they are in the discord server, if not run removeRegistration (remove their registration from db, remove the role from discord, and remove their row in the sheet). return.
-        b. update their osu and discord data with helper functions for both
-        c. if bwsRank is outside of 1000 to 30000 run removeRegistration. return.
-        d. if there are changes to any of osu.username, osu.country_code, osu.rank, osu.badges, discord.username, discord.discriminator, discord.avatar update those values in the db.
-        e. check if their row exists and update their row in the sheet, if it doesn't exist add it
-        c. if osu.username changed updateDiscordNickname()
-      */
+      for (let registration of registrations) {
+        const member = members.find((m) => m.user.id === registration.discord.id);
+
+        // Check if user is in the discord server
+        if (!member) {
+          // If not, remove their registration
+          console.log(`User ${registration.id} is not in the discord server. Removing their registration.`);
+          await removeRegistration(registration, "User is not in the discord server.", true);
+          continue;
+        }
+
+        // Get updated osu user data
+        const osuUser = await getOsuUser(registration.osu.id);
+
+        // Check if user's bws rank is outside of 1000 to 30000
+        const bwsRank = BwsRankCalc(osuUser.statistics.global_rank, BadgeFilter(osuUser));
+        if (bwsRank < 1000 || bwsRank > 30000) {
+          // If so, remove their registration
+          console.log(`User ${registration.id} is outside of the rank range. Removing their registration.`);
+          await removeRegistration(registration, "User is outside of the rank range.", true);
+          continue;
+        }
+
+        updateRegistration(registration, osuUser, member);
+      }
     } catch (error) {
       console.log("Error occurred while running registration update cron job.");
       console.log(error);

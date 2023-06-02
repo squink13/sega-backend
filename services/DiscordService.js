@@ -4,9 +4,7 @@ const botToken = process.env.DISCORD_BOT_TOKEN;
 const guildId = "1089693219383676948";
 const registeredRoleId = "1100250097008246876";
 
-export function getDiscordUser() {
-  // Implementation goes here
-}
+export function getDiscordUser() {}
 
 export async function getAllMembers() {
   let members = [];
@@ -86,5 +84,5 @@ export async function removeRegisteredRole(member) {
 }
 
 export function updateDiscordNickname() {
-  // Implementation goes here
+  // TODO: Implement updateDiscordNickname()
 }

@@ -1,0 +1,8 @@
+{
+  "databaseURL": "https://squink13-s-workspace-8aisaq.us-east-1.xata.sh/db/gacha-draft",
+  "codegen": {
+    "output": "xata.js",
+    "moduleType": "esm",
+    "declarations": true
+  }
+}

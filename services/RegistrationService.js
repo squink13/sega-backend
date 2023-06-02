@@ -1,10 +1,11 @@
+import fetch from "node-fetch";
 import { generateAvatarUrl, getDiscordTag } from "../util/DiscordUtils.js";
 import { BadgeFilter } from "../util/OsuUtils.js";
 import { XataClient } from "../xata.js";
 import { removeRegisteredRole, sendDirectMessage, updateDiscordNickname } from "./DiscordService.js";
 import { createOrUpdateSheetRow, removeSheetRow } from "./SheetService.js";
 
-const xata = new XataClient();
+const xata = new XataClient({ fetch: fetch });
 
 export async function getAllRegistrations() {
   try {

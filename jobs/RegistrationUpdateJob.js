@@ -22,7 +22,7 @@ export function startRegistrationUpdateJob() {
   });
 
   // TESTING ONLY
-  registrationUpdateJob();
+  //registrationUpdateJob();
 
   task.start();
 }

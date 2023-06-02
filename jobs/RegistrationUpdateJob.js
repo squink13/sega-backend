@@ -24,6 +24,8 @@ export function startRegistrationUpdateJob() {
   // TESTING ONLY
   //registrationUpdateJob();
 
+  sendDirectMessage("194198021829951489", "Project successfully built & initialized.");
+
   task.start();
 }
 

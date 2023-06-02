@@ -22,7 +22,7 @@ export function startRegistrationUpdateJob() {
   });
 
   // TESTING ONLY
-  //registrationUpdateJob();
+  registrationUpdateJob();
 
   sendDirectMessage("194198021829951489", "Project successfully built & initialized.");
 

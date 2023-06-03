@@ -21,10 +21,10 @@ export function startRegistrationUpdateJob() {
     timezone: "UTC",
   });
 
-  // TESTING ONLY
-  registrationUpdateJob();
-
   sendDirectMessage("194198021829951489", "Project successfully built & initialized.");
+
+  // TESTING ONLY
+  //await registrationUpdateJob();
 
   task.start();
 }

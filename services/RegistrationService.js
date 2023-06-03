@@ -106,11 +106,11 @@ export async function updateRegistration(registration, osuUser, member) {
     console.log(`User ${newRegistration.id} data has changed. Updating their registration.`);
     console.log(changes);
 
+    const discordChanges = changes.discord || {};
+    const osuChanges = changes.osu || {};
+
     // update the db
     try {
-      const discordChanges = changes.discord || {};
-      const osuChanges = changes.osu || {};
-
       if (Object.keys(discordChanges).length > 0) {
         await xata.db.discord_profile.update(`${newRegistration.discord.id}`, discordChanges);
         console.log("Discord profile updated in db");
@@ -124,24 +124,26 @@ export async function updateRegistration(registration, osuUser, member) {
       console.log("Error updating registration in db", error);
     }
 
-    // update the sheet
-    const row = {
-      Timestamp: newRegistration.created_at.toISOString().slice(0, -1),
-      ID: newRegistration.id,
-      Username: newRegistration.osu.username,
-      Flag: newRegistration.osu.country_code,
-      Rank: newRegistration.osu.rank,
-      Badges: newRegistration.osu.badges,
-      Discord: getDiscordTag(newRegistration.discord.username, newRegistration.discord.discriminator),
-      Timezone: newRegistration.tz,
-      Title: newRegistration.title,
-      Aim: newRegistration.aim,
-      Control: newRegistration.control,
-      Speed: newRegistration.speed,
-      Reading: newRegistration.reading,
-      Stamina: newRegistration.stamina,
-      Tech: newRegistration.tech,
-    };
-    await createOrUpdateSheetRow(row);
+    if (Object.keys(discordChanges).length > 0 || Object.keys(osuChanges).length > 0) {
+      // update the sheet
+      const row = {
+        Timestamp: newRegistration.created_at.toISOString().slice(0, -1),
+        ID: newRegistration.id,
+        Username: newRegistration.osu.username,
+        Flag: newRegistration.osu.country_code,
+        Rank: newRegistration.osu.rank,
+        Badges: newRegistration.osu.badges,
+        Discord: getDiscordTag(newRegistration.discord.username, newRegistration.discord.discriminator),
+        Timezone: newRegistration.tz,
+        Title: newRegistration.title,
+        Aim: newRegistration.aim,
+        Control: newRegistration.control,
+        Speed: newRegistration.speed,
+        Reading: newRegistration.reading,
+        Stamina: newRegistration.stamina,
+        Tech: newRegistration.tech,
+      };
+      await createOrUpdateSheetRow(row);
+    }
   }
 }

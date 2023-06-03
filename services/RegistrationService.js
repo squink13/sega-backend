@@ -103,7 +103,6 @@ export async function updateRegistration(registration, osuUser, member) {
 
   // If there are any changes, update the db and sheet.
   if (Object.keys(changes).length > 0) {
-    console.log(`User ${newRegistration.id} data has changed. Updating their registration.`);
     console.log(changes);
 
     const discordChanges = changes.discord || {};

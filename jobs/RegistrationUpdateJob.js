@@ -10,11 +10,10 @@ import { getAllRegistrations, removeRegistration, updateRegistration } from "../
 import { getAllRows, initializeSheetService, removeSheetRow } from "../services/SheetService.js";
 import { BadgeFilter, BwsRankCalc } from "../util/OsuUtils.js";
 
-const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
-
 let task;
 
 export function startRegistrationUpdateJob() {
+  const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
   // This will run the job every 4 hours
   task = cron.schedule("0 */4 * * *", registrationUpdateJob, {
     scheduled: true,
@@ -24,7 +23,7 @@ export function startRegistrationUpdateJob() {
   sendDirectMessage("194198021829951489", "Project successfully built & initialized.");
 
   // TESTING ONLY
-  //await registrationUpdateJob();
+  //registrationUpdateJob();
 
   task.start();
 }
@@ -35,7 +34,7 @@ async function registrationUpdateJob() {
     console.log("Stopping cron job as the end date has been reached.");
     task.stop();
   } else {
-    sendDirectMessage("194198021829951489", "Registration update cron job started.");
+    await sendDirectMessage("194198021829951489", "Registration update cron job started.");
     console.log("Running registration update cron job...");
     console.time("cron job time:");
 

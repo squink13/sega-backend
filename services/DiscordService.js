@@ -1,8 +1,4 @@
 import axios from "axios";
-import { Client, GatewayIntentBits } from "discord.js";
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages] });
-client.login(process.env.DISCORD_BOT_TOKEN);
 
 const botToken = process.env.DISCORD_BOT_TOKEN;
 const guildId = "1089693219383676948";
@@ -111,11 +107,41 @@ export async function updateDiscordNickname(newName, member) {
   }
 }
 
-export async function sendDirectMessage(id, message) {
+export async function sendDirectMessage(userId, message) {
   try {
-    let targetUser = await client.users.fetch(id);
-    await targetUser.send(message);
+    // Step 1: Create a DM channel with the user.
+    let response = await axios.post(
+      `https://discord.com/api/users/@me/channels`,
+      { recipient_id: userId },
+      {
+        headers: {
+          Authorization: `Bot ${botToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Check if response is successful
+    if (response.data && response.data.id) {
+      let dmChannelId = response.data.id;
+
+      // Step 2: Send a message to the created DM channel.
+      await axios.post(
+        `https://discord.com/api/channels/${dmChannelId}/messages`,
+        { content: message },
+        {
+          headers: {
+            Authorization: `Bot ${botToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(`Message sent successfully to user ${userId}`);
+    } else {
+      console.error(`Error creating DM channel with user ${userId}`);
+    }
   } catch (error) {
-    console.error(`Error sending direct message to user ${id}`);
+    console.error(`Error sending direct message to user ${userId}:`, error);
   }
 }

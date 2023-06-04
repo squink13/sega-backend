@@ -11,9 +11,9 @@ import { getAllRows, initializeSheetService, removeSheetRow } from "../services/
 import { BadgeFilter, BwsRankCalc } from "../util/OsuUtils.js";
 
 let task;
+const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
 
 export function startRegistrationUpdateJob() {
-  const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
   // This will run the job every 4 hours
   task = cron.schedule("0 */4 * * *", registrationUpdateJob, {
     scheduled: true,
@@ -23,7 +23,7 @@ export function startRegistrationUpdateJob() {
   sendDirectMessage("194198021829951489", "Project successfully built & initialized.");
 
   // TESTING ONLY
-  //registrationUpdateJob();
+  registrationUpdateJob();
 
   task.start();
 }

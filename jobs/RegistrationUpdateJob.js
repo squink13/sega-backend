@@ -15,7 +15,7 @@ const endDate = new Date(Date.UTC(2023, 5, 12, 0, 10)); // June 12, 2023 @ 00:10
 
 export function startRegistrationUpdateJob() {
   // This will run the job every 4 hours
-  task = cron.schedule("0 */4 * * *", registrationUpdateJob, {
+  task = cron.schedule("0 */6 * * *", registrationUpdateJob, {
     scheduled: true,
     timezone: "UTC",
   });

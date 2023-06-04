@@ -142,6 +142,6 @@ export async function sendDirectMessage(userId, message) {
       console.error(`Error creating DM channel with user ${userId}`);
     }
   } catch (error) {
-    console.error(`Error sending direct message to user ${userId}:`, error);
+    console.error(`Error sending direct message to user ${userId}`);
   }
 }

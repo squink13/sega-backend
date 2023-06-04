@@ -11,7 +11,7 @@ import { getAllRows, initializeSheetService, removeSheetRow } from "../services/
 import { BadgeFilter, BwsRankCalc } from "../util/OsuUtils.js";
 
 let task;
-const endDate = new Date(Date.UTC(2023, 5, 12)); // June 12, 2023 @ 00:00:00 UTC
+const endDate = new Date(Date.UTC(2023, 5, 12, 0, 10)); // June 12, 2023 @ 00:10:00 UTC
 
 export function startRegistrationUpdateJob() {
   // This will run the job every 4 hours

@@ -24,6 +24,7 @@ export function BadgeFilter(osuPlayerData) {
     "labour of love",
     "community choice",
     "community favourite",
+    "taiko",
   ];
 
   const ignoredBadges = new RegExp(filteredWords.join("|"), "i");

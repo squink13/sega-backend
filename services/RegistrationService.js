@@ -56,13 +56,13 @@ export async function updateRegistration(registration, osuUser, member) {
   newRegistration.osu.rank = parseInt(newRegistration.osu.rank, 10); // ensure data type is correct
 
   // Check for changes to the osu user
-  const osuFields = ["username", "country_code", "rank", "badges"];
+  const osuFields = ["username", "country_code" /* "rank", "badges" */];
 
   const osuFieldValues = {
     username: osuUser.username,
     country_code: osuUser.country_code,
-    rank: parseInt(osuUser.statistics.global_rank, 10),
-    badges: BadgeFilter(osuUser),
+    /* rank: parseInt(osuUser.statistics.global_rank, 10),
+    badges: BadgeFilter(osuUser), */
   };
 
   osuFields.forEach((field) => {

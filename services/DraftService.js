@@ -421,7 +421,7 @@ export default async function RunDraft() {
   captains.push(new Captain(10759664, "xtremeities", ably, channel));
   captains.push(new Captain(6752116, "Arraxey", ably, channel));
   captains.push(new Captain(12058601, "Squink", ably, channel));
-  captains.push(new Captain(11238108, "GastonGL", ably, channel));
+  captains.push(new Captain(10137131, "BlankTap", ably, channel));
   captains.push(new Captain(11706972, "Matt4132", ably, channel));
   captains.push(new Captain(14041375, "yenator07", ably, channel));
   captains.push(new Captain(11706972, "Matt4132", ably, channel));

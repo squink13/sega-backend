@@ -392,7 +392,7 @@ export default async function RunDraft() {
     console.log("Draft is resuming...");
   }
 
-  captains.push(new Captain(114017, "KRZY", ably, channel));
+  /* captains.push(new Captain(114017, "KRZY", ably, channel));
   captains.push(new Captain(5426640, "nanawo", ably, channel));
   captains.push(new Captain(10137131, "BlankTap", ably, channel));
   captains.push(new Captain(7119659, "Amuro", ably, channel));
@@ -407,7 +407,24 @@ export default async function RunDraft() {
   captains.push(new Captain(7640581, "Lexonox", ably, channel)); // -Atour-'s ID!!
   captains.push(new Captain(12090610, "Tatze", ably, channel));
   captains.push(new Captain(14806365, "chests", ably, channel));
-  captains.push(new Captain(11371245, "aahoff", ably, channel));
+  captains.push(new Captain(11371245, "aahoff", ably, channel)); */
+
+  captains.push(new Captain(12904237, "Gabey", ably, channel));
+  captains.push(new Captain(6752116, "Arraxey", ably, channel));
+  captains.push(new Captain(17707354, "-AJ", ably, channel));
+  captains.push(new Captain(10659233, "BTG4", ably, channel));
+  captains.push(new Captain(10472784, "Dragbit 7", ably, channel));
+  captains.push(new Captain(12058601, "Squink", ably, channel));
+  captains.push(new Captain(11238108, "GastonGL", ably, channel));
+  captains.push(new Captain(16052525, "Geag", ably, channel));
+  captains.push(new Captain(9728880, "Gore_", ably, channel));
+  captains.push(new Captain(10759664, "xtremeities", ably, channel));
+  captains.push(new Captain(6752116, "Arraxey", ably, channel));
+  captains.push(new Captain(12058601, "Squink", ably, channel));
+  captains.push(new Captain(11238108, "GastonGL", ably, channel));
+  captains.push(new Captain(11706972, "Matt4132", ably, channel));
+  captains.push(new Captain(14041375, "yenator07", ably, channel));
+  captains.push(new Captain(11706972, "Matt4132", ably, channel));
 
   let playerIds = [
     18092331, 5309981, 6671641, 9323821, 2317789, 14447878, 7537133, 15173952, 11234706, 4519494, 6283858, 2312106,

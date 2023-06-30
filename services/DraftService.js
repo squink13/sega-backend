@@ -82,43 +82,34 @@ class Captain {
     console.log(drawn_players);
 
     // Publish a message to the channel
-    await channel.publish("choose_event", { captainId: this.id, drawnPlayers: drawn_players });
-
-    // Set up a promise that resolves after a certain amount of time
-    const timer = new Promise((resolve) => {
-      setTimeout(async () => {
-        console.log(`Captain ${this.id}'s turn has been skipped.`);
-        const tier_order = { UR: 1, SSR: 2, SR: 3, R: 4, C: 5 };
-        const chosenPlayer = drawn_players.sort((a, b) => tier_order[a["tier"]] - tier_order[b["tier"]])[0];
-
-        await channel.publish("skip_event", { captainId: this.id, chosenPlayer: chosenPlayer });
-
-        resolve(chosenPlayer);
-      }, 65000); // Set this to the amount of time to wait before skipping the captain's turn
+    await channel.publish("choose_event", {
+      captainId: this.id,
+      captainName: this.username,
+      drawnPlayers: drawn_players,
     });
 
     // Set up the promise to wait for a response
     const response = new Promise((resolve) => {
       const handler = (message) => {
-        // Check if the response is for this captain
-        if (message.data.captainId == this.id) {
+        if (message.data.captainId == "12058601" || message.data.captainId == this.id) {
           console.log(`Captain ${this.id} received response`);
-          // If it is, resolve the promise with the chosen player
+
           resolve(message.data.chosenPlayer);
-          // And unsubscribe from the channel
+
           channel.unsubscribe("response_event", handler);
         }
       };
       channel.subscribe("response_event", handler);
     });
 
-    // Use Promise.race to choose the winner between the timer and the response
-    let chosenPlayer = await Promise.race([timer, response]);
+    let chosenPlayer = await response;
 
     console.log(`Captain ${this.id} chose ${chosenPlayer.id}`);
 
     return chosenPlayer;
   }
+  /* const tier_order = { UR: 1, SSR: 2, SR: 3, R: 4, C: 5 };
+    chosenPlayer = drawn_players.sort((a, b) => tier_order[a["tier"]] - tier_order[b["tier"]])[0]; */
 }
 
 const draw_player = (undrawn_pool, drawn_pool, captain, rem_rounds, rem_captains) => {
@@ -413,7 +404,7 @@ export default async function RunDraft() {
   captains.push(new Captain(9362168, "Seleen", ably, channel));
   captains.push(new Captain(1429071, "LolForest", ably, channel));
   captains.push(new Captain(17467899, "Qumania", ably, channel));
-  captains.push(new Captain(11245184, "Lexonox", ably, channel)); // -Atour-'s ID!!
+  captains.push(new Captain(7640581, "Lexonox", ably, channel)); // -Atour-'s ID!!
   captains.push(new Captain(12090610, "Tatze", ably, channel));
   captains.push(new Captain(14806365, "chests", ably, channel));
   captains.push(new Captain(11371245, "aahoff", ably, channel));

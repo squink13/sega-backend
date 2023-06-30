@@ -150,10 +150,10 @@ export async function updateUsernames() {
 
     if (!member) {
       console.log(`User ${registration.osu.username} [${registration.id}] is not in the discord server.`);
-    } /* else {
+    } else {
       const osuUser = await getOsuUser(registration.osu.id);
       await updateRegistration(registration, osuUser, member);
     }
-    console.log("=================================="); */
+    console.log("==================================");
   }
 }

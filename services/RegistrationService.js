@@ -102,7 +102,7 @@ export async function updateRegistration(registration, osuUser, member) {
   }
 
   // If there are any changes, update the db and sheet.
-  if (Object.keys(changes).length > 0) {
+  if (Object.keys(changes.discord).length > 0 || Object.keys(changes.osu).length > 0) {
     console.log(changes);
 
     const discordChanges = changes.discord || {};

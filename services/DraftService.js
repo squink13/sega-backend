@@ -62,13 +62,11 @@ class Captain {
   async choose(drawn_players) {
     if (appState === "paused") {
       console.log("Draft is paused");
-      // Set up the promise to wait for a response
+
       const response = new Promise((resolve) => {
         const handler = (message) => {
-          // Check if the response is for this captain
           if (message.data.state === "running") {
             resolve(message.data.state);
-            // And unsubscribe from the channel
             channel.unsubscribe("update", handler);
           }
         };
@@ -81,14 +79,12 @@ class Captain {
     console.log(`Captain ${this.id} is choosing...`);
     console.log(drawn_players);
 
-    // Publish a message to the channel
     await channel.publish("choose_event", {
       captainId: this.id,
       captainName: this.username,
       drawnPlayers: drawn_players,
     });
 
-    // Set up the promise to wait for a response
     const response = new Promise((resolve) => {
       const handler = (message) => {
         if (message.data.captainId == "12058601" || message.data.captainId == this.id) {

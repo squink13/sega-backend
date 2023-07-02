@@ -416,7 +416,7 @@ export default async function RunDraft() {
   captains.push(new Captain(9362168, "Seleen", ably, channel));
   captains.push(new Captain(1429071, "LolForest", ably, channel));
   captains.push(new Captain(17467899, "Qumania", ably, channel));
-  captains.push(new Captain(7640581, "Lexonox", ably, channel)); // -Atour- id!!
+  captains.push(new Captain(11245184, "Lexonox", ably, channel)); // -Atour- id!!
   captains.push(new Captain(12090610, "Tatze", ably, channel));
   captains.push(new Captain(14806365, "chests", ably, channel));
   captains.push(new Captain(11371245, "aahoff", ably, channel));

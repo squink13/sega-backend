@@ -229,6 +229,11 @@ const draft_players = async (tier_pool, rounds = 7) => {
   // loops through the draft rounds
   for (let round = 0; round < rounds; round++) {
     console.log(`Round ${round + 1}`);
+
+    await channel.publish("current_round", {
+      round: round + 1,
+    });
+
     for (let captain of captains) {
       let drawn_players = [];
       // draws 4 players for each captain
@@ -240,6 +245,7 @@ const draft_players = async (tier_pool, rounds = 7) => {
           rounds - (round + 1),
           captains.length - (captains.indexOf(captain) + 1)
         );
+
         if (cur_drawn_player["tier"] === "UR") {
           captain.total_ur_drawn += 1;
         } else if (cur_drawn_player["tier"] === "SSR") {
@@ -247,6 +253,9 @@ const draft_players = async (tier_pool, rounds = 7) => {
         } else if (cur_drawn_player["tier"] === "SR") {
           captain.total_sr_drawn += 1;
         }
+
+        // increment the timesPulled count
+        cur_drawn_player.timesPulled += 1;
 
         drawn_players.push(cur_drawn_player);
 
@@ -260,21 +269,24 @@ const draft_players = async (tier_pool, rounds = 7) => {
         }
 
         update_pity_system(captain, cur_drawn_player, undrawn_pool, drawn_pool); // updates the captain's pity system weights
+
+        // remove player from drawn or undrawn pool in the most unoptimized way possible :D
+        for (let tier in undrawn_pool) {
+          undrawn_pool[tier] = undrawn_pool[tier].filter((player) => player !== cur_drawn_player);
+        }
+        for (let tier in drawn_pool) {
+          drawn_pool[tier] = drawn_pool[tier].filter((player) => player !== cur_drawn_player);
+        }
       }
 
       let chosen_player = await captain.choose(drawn_players); // captain chooses a player
       captain.team.push(chosen_player); // adds the chosen player to the team
 
-      // Check if the chosen player exists in the undrawn or drawn pool and remove them accordingly
-      let undrawn_players_of_chosen_tier = undrawn_pool[chosen_player["tier"]];
-      let drawn_players_of_chosen_tier = drawn_pool[chosen_player["tier"]];
-
-      if (undrawn_players_of_chosen_tier.includes(chosen_player)) {
-        undrawn_pool[chosen_player["tier"]] = undrawn_players_of_chosen_tier.filter(
-          (player) => player !== chosen_player
-        );
-      } else {
-        drawn_pool[chosen_player["tier"]] = drawn_players_of_chosen_tier.filter((player) => player !== chosen_player);
+      // add the non chosen players in drawn players back into the drawn pool
+      for (let player of drawn_players) {
+        if (player !== chosen_player) {
+          drawn_pool[player["tier"]].push(player);
+        }
       }
     }
   }
@@ -392,7 +404,7 @@ export default async function RunDraft() {
     console.log("Draft is resuming...");
   }
 
-  /* captains.push(new Captain(114017, "KRZY", ably, channel));
+  captains.push(new Captain(114017, "KRZY", ably, channel));
   captains.push(new Captain(5426640, "nanawo", ably, channel));
   captains.push(new Captain(10137131, "BlankTap", ably, channel));
   captains.push(new Captain(7119659, "Amuro", ably, channel));
@@ -404,27 +416,10 @@ export default async function RunDraft() {
   captains.push(new Captain(9362168, "Seleen", ably, channel));
   captains.push(new Captain(1429071, "LolForest", ably, channel));
   captains.push(new Captain(17467899, "Qumania", ably, channel));
-  captains.push(new Captain(7640581, "Lexonox", ably, channel)); // -Atour-'s ID!!
+  captains.push(new Captain(7640581, "Lexonox", ably, channel)); // -Atour- id!!
   captains.push(new Captain(12090610, "Tatze", ably, channel));
   captains.push(new Captain(14806365, "chests", ably, channel));
-  captains.push(new Captain(11371245, "aahoff", ably, channel)); */
-
-  captains.push(new Captain(12904237, "Gabey", ably, channel));
-  captains.push(new Captain(6752116, "Arraxey", ably, channel));
-  captains.push(new Captain(17707354, "-AJ", ably, channel));
-  captains.push(new Captain(10659233, "BTG4", ably, channel));
-  captains.push(new Captain(10472784, "Dragbit 7", ably, channel));
-  captains.push(new Captain(12058601, "Squink", ably, channel));
-  captains.push(new Captain(11238108, "GastonGL", ably, channel));
-  captains.push(new Captain(16052525, "Geag", ably, channel));
-  captains.push(new Captain(9728880, "Gore_", ably, channel));
-  captains.push(new Captain(10759664, "xtremeities", ably, channel));
-  captains.push(new Captain(6752116, "Arraxey", ably, channel));
-  captains.push(new Captain(12058601, "Squink", ably, channel));
-  captains.push(new Captain(10137131, "BlankTap", ably, channel));
-  captains.push(new Captain(11706972, "Matt4132", ably, channel));
-  captains.push(new Captain(14041375, "yenator07", ably, channel));
-  captains.push(new Captain(11706972, "Matt4132", ably, channel));
+  captains.push(new Captain(11371245, "aahoff", ably, channel));
 
   let playerIds = [
     18092331, 5309981, 6671641, 9323821, 2317789, 14447878, 7537133, 15173952, 11234706, 4519494, 6283858, 2312106,
@@ -432,16 +427,16 @@ export default async function RunDraft() {
     1775182, 6398160, 11786864, 10157694, 8150535, 8414284, 7457788, 3493804, 5281485, 16538717, 7810180, 2012039,
     9265990, 20630250, 8445602, 9604150, 12296128, 5154946, 11940767, 6951719, 757783, 10325072, 12904237, 10958852,
     12585858, 7249644, 8105655, 12329311, 10459580, 13951894, 10728620, 5182623, 15274893, 10458639, 14255332, 9919528,
-    5968633, 10516802, 15242810, 15441612, 11749569, 15271985, 5442251, 7586334, 6906789, 2035254, 8953955, 3674590,
-    7249261, 14963905, 10509043, 7748891, 9192260, 11186709, 11238108, 12086452, 3115283, 11920994, 4673649, 8926244,
-    11836334, 10463129, 21653406, 13206785, 11398156, 13310147, 11137291, 14282987, 20501126, 3621226, 5472693, 8006029,
-    9560694, 12115298, 9732417, 17958667, 7807935, 1788022, 12270069, 18131614, 15646924, 2367495, 12352050, 10656864,
-    14518295, 12537417, 13627426, 9317938, 10204748, 8431549, 9878349, 14024115, 1433427, 14165027, 8840382, 24270105,
-    8170022, 12476276, 9845103, 10472784, 6600809, 20276851, 7115794, 14547194, 10748381, 8589120, 10869615, 13925698,
-    2504750, 7351448, 11461810, 9526124, 8112433, 7449949, 9548110, 14390731, 8828875, 2629617, 6178640, 19857248,
-    10029074, 10571200, 6772887, 6652874, 6571991, 11648117, 5334278, 12016150, 15975275, 2854598, 6843383, 4039647,
-    14309415, 10997439, 13659816, 3999831, 17663666, 1274798, 8226107, 2282145, 10722794, 11113067, 10626955, 11536421,
-    13626098, 6124459, 11959709, 9364594, 17707354, 4860447, 18781432, 7989469,
+    5968633, 10516802, 15242810, 15441612, 11749569, 15271985, 5442251, 6906789, 2035254, 8953955, 3674590, 7249261,
+    14963905, 10509043, 7748891, 9192260, 11186709, 11238108, 12086452, 3115283, 11920994, 4673649, 8926244, 11836334,
+    10463129, 21653406, 13206785, 11398156, 13310147, 11137291, 14282987, 20501126, 5472693, 8006029, 9560694, 12115298,
+    9732417, 7807935, 1788022, 12270069, 18131614, 15646924, 2367495, 12352050, 10656864, 14518295, 12537417, 13627426,
+    9317938, 10204748, 8431549, 9878349, 14024115, 1433427, 14165027, 8840382, 24270105, 8170022, 12476276, 9845103,
+    10472784, 6600809, 20276851, 7115794, 14547194, 10748381, 8589120, 10869615, 13925698, 2504750, 7351448, 11461810,
+    9526124, 8112433, 7449949, 9548110, 14390731, 8828875, 2629617, 6178640, 19857248, 10029074, 10571200, 6772887,
+    6652874, 6571991, 11648117, 5334278, 12016150, 15975275, 2854598, 6843383, 4039647, 14309415, 10997439, 13659816,
+    3999831, 17663666, 1274798, 8226107, 2282145, 10722794, 11113067, 10626955, 11536421, 13626098, 6124459, 11959709,
+    9364594, 17707354, 4860447, 18781432, 7989469, 7713152, 15656399, 11239094,
   ];
 
   let tier_pool = {
@@ -456,31 +451,56 @@ export default async function RunDraft() {
 
   // Populate tier_pool
   for (let i = 0; i < starting_total["UR"]; i++) {
-    tier_pool["UR"].push({ id: playerIds[total + i], tier: "UR", base_prob: UR_BASE_PROB / starting_total["UR"] });
+    tier_pool["UR"].push({
+      id: playerIds[total + i],
+      tier: "UR",
+      base_prob: UR_BASE_PROB / starting_total["UR"],
+      timesPulled: 0,
+    });
   }
 
   total += starting_total["UR"];
 
   for (let i = 0; i < starting_total["SSR"]; i++) {
-    tier_pool["SSR"].push({ id: playerIds[total + i], tier: "SSR", base_prob: SSR_BASE_PROB / starting_total["SSR"] });
+    tier_pool["SSR"].push({
+      id: playerIds[total + i],
+      tier: "SSR",
+      base_prob: SSR_BASE_PROB / starting_total["SSR"],
+      timesPulled: 0,
+    });
   }
 
   total += starting_total["SSR"];
 
   for (let i = 0; i < starting_total["SR"]; i++) {
-    tier_pool["SR"].push({ id: playerIds[total + i], tier: "SR", base_prob: SR_BASE_PROB / starting_total["SR"] });
+    tier_pool["SR"].push({
+      id: playerIds[total + i],
+      tier: "SR",
+      base_prob: SR_BASE_PROB / starting_total["SR"],
+      timesPulled: 0,
+    });
   }
 
   total += starting_total["SR"];
 
   for (let i = 0; i < starting_total["R"]; i++) {
-    tier_pool["R"].push({ id: playerIds[total + i], tier: "R", base_prob: R_BASE_PROB / starting_total["R"] });
+    tier_pool["R"].push({
+      id: playerIds[total + i],
+      tier: "R",
+      base_prob: R_BASE_PROB / starting_total["R"],
+      timesPulled: 0,
+    });
   }
 
   total += starting_total["R"];
 
   for (let i = 0; i < starting_total["C"]; i++) {
-    tier_pool["C"].push({ id: playerIds[total + i], tier: "C", base_prob: C_BASE_PROB / starting_total["C"] });
+    tier_pool["C"].push({
+      id: playerIds[total + i],
+      tier: "C",
+      base_prob: C_BASE_PROB / starting_total["C"],
+      timesPulled: 0,
+    });
   }
 
   await draft_players(tier_pool);
